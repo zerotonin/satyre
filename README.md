@@ -4,7 +4,7 @@ Below is a comprehensive README template for your GitHub repository. You can cus
 
 # Satyre: A Simulation Framework for Fly Movement Analysis
 
-Satyre is a simulation and analysis framework designed to model and investigate the exploratory behavior of flies. It incorporates experimental data to generate probabilistic models of prototypical movements and simulates fly trajectories under various conditions, including different light environments and movement strategies. The framework also provides a suite of analysis tools to evaluate key metrics such as food collection efficiency, area covered by the mechanosensory field, step–size distributions, and detailed movement statistics.
+Satyre (*S*ensory locomotion str*AT*eg*Y* f*R*am*E*work) is a simulation and analysis framework designed to model and investigate the exploratory behavior of flies. It incorporates experimental data to generate probabilistic models of prototypical movements and simulates fly trajectories under various conditions, including different light environments and movement strategies. The framework also provides a suite of analysis tools to evaluate key metrics such as food collection efficiency, area covered by the mechanosensory field, step–size distributions, and detailed movement statistics.
 
 ## Overview
 
