@@ -165,5 +165,6 @@ Contributions are welcome! If you find any bugs or have suggestions for improvem
 
 ## License
 
-[Specify your license here, e.g., MIT License]
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
