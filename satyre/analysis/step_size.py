@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  step_size « step-length distribution analysis »        ║
+║  step_size « step-length distribution analysis »         ║
 ╚══════════════════════════════════════════════════════════╝
 """
 

@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  preprocessing « build Markov transition matrices »     ║
+║  preprocessing « build Markov transition matrices »      ║
 ╚══════════════════════════════════════════════════════════╝
 
 Converts raw experimental data (prototypical-movement index

@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  food_found « foraging-efficiency summary »             ║
+║  food_found « foraging-efficiency summary »              ║
 ╚══════════════════════════════════════════════════════════╝
 """
 

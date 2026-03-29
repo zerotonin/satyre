@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  simulation « walking strategy simulators »             ║
+║  simulation « walking strategy simulators »              ║
 ╚══════════════════════════════════════════════════════════╝
 
 Provides two agent classes that move through a toroidal 2-D

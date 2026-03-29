@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  movement_types « stationary / translational / rot »    ║
+║  movement_types « stationary / translational / rot »     ║
 ╚══════════════════════════════════════════════════════════╝
 
 Classify each prototypical-movement step into stationary,

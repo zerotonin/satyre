@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  area_covered « exploration-rate computation »          ║
+║  area_covered « exploration-rate computation »           ║
 ╚══════════════════════════════════════════════════════════╝
 
 Compute the unique area swept by the fly's body (or by a

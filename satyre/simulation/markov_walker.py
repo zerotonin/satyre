@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  markov_walker « HMM-driven locomotion simulator »      ║
+║  markov_walker « HMM-driven locomotion simulator »       ║
 ╚══════════════════════════════════════════════════════════╝
 
 Replays empirical prototypical-movement (PM) sequences via a

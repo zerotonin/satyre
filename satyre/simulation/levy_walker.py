@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  levy_walker « Lévy-flight / random-walk simulator »    ║
+║  levy_walker « Lévy-flight / random-walk simulator »     ║
 ╚══════════════════════════════════════════════════════════╝
 
 Implements Lévy-flight and uniform random-walk foraging

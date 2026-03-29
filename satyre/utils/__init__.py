@@ -1,7 +1,7 @@
 """
 ╔══════════════════════════════════════════════════════════╗
 ║  utils « boundary handling & data preprocessing »       ║
-╚══════════════════════════════════════════════════════════╝
+╚═══════════════════════════════════════════════════════ ═══╝
 """
 
 from satyre.utils.hyperspace_solver import HyperspaceSolver

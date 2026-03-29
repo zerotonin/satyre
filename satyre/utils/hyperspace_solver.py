@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  hyperspace_solver « toroidal boundary wrap »           ║
+║  hyperspace_solver « toroidal boundary wrap »            ║
 ╚══════════════════════════════════════════════════════════╝
 
 Implements a line-segment intersection solver for a square

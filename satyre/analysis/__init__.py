@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════╗
-║  analysis « post-simulation metrics & plotting »        ║
+║  analysis « post-simulation metrics & plotting »         ║
 ╚══════════════════════════════════════════════════════════╝
 
 Functions for computing exploration rate, food-collection
