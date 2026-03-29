@@ -1,170 +1,222 @@
-Below is a comprehensive README template for your GitHub repository. You can customize it further as needed.
+# SATYRE — Sensory locomotion str**AT**eg**Y** f**R**am**E**work
+
+[![Tests](https://github.com/zerotonin/satyre/actions/workflows/tests.yml/badge.svg)](https://github.com/zerotonin/satyre/actions/workflows/tests.yml)
+[![Documentation](https://github.com/zerotonin/satyre/actions/workflows/docs.yml/badge.svg)](https://zerotonin.github.io/satyre)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+
+SATYRE simulates and analyses the exploratory behaviour of *Drosophila
+melanogaster* under visual deprivation.  It provides Markov-chain replay of
+empirical locomotion data, Lévy-flight and random-walk reference agents, a
+toroidal arena with food-collection mechanics, and post-simulation analysis
+tools for exploration rate, drift angles, step-size distributions, and
+foraging efficiency.
+
+The code accompanies the paper:
+
+> **Tactile space expansion in vision-deprived flies**
+> Kristina Corthals, Irene M. Aji, Miriam Berger, Philip Hehlert,
+> Jonas Albers, Christian Dullin, Heribert Gras, Martin C. Göpfert,
+> Naoyuki Fuse & Bart R.H. Geurten
+> *Proceedings of the Royal Society B* (submitted)
 
 ---
 
-# Satyre: A Simulation Framework for Fly Movement Analysis
+## Highlights
 
-Satyre (*S*ensory locomotion str*AT*eg*Y* f*R*am*E*work) is a simulation and analysis framework designed to model and investigate the exploratory behavior of flies. It incorporates experimental data to generate probabilistic models of prototypical movements and simulates fly trajectories under various conditions, including different light environments and movement strategies. The framework also provides a suite of analysis tools to evaluate key metrics such as food collection efficiency, area covered by the mechanosensory field, step–size distributions, and detailed movement statistics.
+- **Markov walker** — replays empirical prototypical-movement (PM) sequences
+  via a first-order Hidden Markov Model fitted to high-speed tracking data
+  (500 fps) of dark-fly and OregonR strains.
+- **Lévy / random-walk agents** — provides baseline foraging models with
+  heavy-tailed (Cauchy) or Gaussian step-size distributions.
+- **Toroidal arena** — the `HyperspaceSolver` wraps trajectories across
+  arena boundaries, preserving direction and remaining step length.
+- **Tactile & visual detection** — food items are collected by body-overlap
+  (dark condition) or within a configurable visual field (light condition).
+- **Analysis suite** — orientation-dependent vs. disc-based exploration
+  rates, movement-type classification, drift-angle (ψ) statistics, and
+  bootstrap confidence intervals on foraging efficiency.
 
-## Overview
-
-The Satyre module integrates several components:
-
-- **Data Preprocessing:**  
-  The `rawData_preprocessing.py` script processes raw experimental data (prototypical movement indices and velocity recordings) to generate matrices of transition probabilities. These matrices are then used as input for the simulation models.
-
-- **Simulation Models:**  
-  Satyre offers multiple simulation approaches:
-  - **Dark Fly Simulations:**  
-    `walkSimOO_updated_darkFly_lightCondition_multiTrials_v2.py` and  
-    `walkSimOO_updated_darkFly_multiTrials_v2.py` implement simulations based on experimental dark–fly and Oregon R (ORL) movement data.
-  - **Levy Flight Simulations:**  
-    `walkSimOO_updated_LevyRandom_v3.py` simulates a Levy flight search strategy based on heavy-tailed step distributions.
-
-- **Analysis Tools:**  
-  A variety of scripts are provided to analyze simulation outputs:
-  - **Area Covered:** `analysis_areaCovered.py`
-  - **Food Collection Efficiency:** `analysis_foodFound.py` and `analysis_PMbased_FoodFound.py`
-  - **Movement Types:** `analysis_movementTypes.py`
-  - **Step Sizes and Velocities/Angles:** `analysis_PMbased_StepsVeloAngles.py`, `analysis_stepSize.py`, and `analysis_velocitiesAngles.py`
-
-- **Utilities and Comparison Scripts:**  
-  - **Boundary Handling:**  
-    `hyperSpaceSolver_updated.py` implements a hyperspace solver that re-maps trajectories that exit the simulation arena so that the fly re-enters from the opposite side.
-  - **Examples and Comparisons:**  
-    `PMexamples.py` provides quick examples of prototypical movement velocities, while `comparisons_v2.py` and `comparisons_v3.py` offer comprehensive comparisons between different movement models.
-
-## Features
-
-- **Flexible Simulation Options:**  
-  Simulate fly trajectories using different strategies (e.g., random walk, ORL-based Levy, dark–fly-based Levy) under various conditions (light vs. dark).
-  
-- **Robust Data Analysis:**  
-  Evaluate metrics such as the area covered by the fly’s sensory field, food collection efficiency, and detailed step–size/velocity/angle distributions.
-  
-- **Accurate Boundary Handling:**  
-  The hyperspace solver ensures realistic handling of trajectories that cross the virtual arena's boundaries.
-  
-- **Statistical Comparisons and Visualizations:**  
-  Built-in scripts generate publication–quality plots (using Matplotlib, Pandas, and Seaborn) and perform statistical tests to compare simulation results.
-
-## Requirements
-
-- Python 3.x
-- [NumPy](https://numpy.org/)
-- [SciPy](https://www.scipy.org/)
-- [Matplotlib](https://matplotlib.org/)
-- [Pandas](https://pandas.pydata.org/)
-- [Seaborn](https://seaborn.pydata.org/)
-- [Shapely](https://pypi.org/project/Shapely/)
-
-Install dependencies via pip:
-
-```bash
-pip install numpy scipy matplotlib pandas seaborn shapely
-```
+---
 
 ## Installation
 
-Clone the repository from GitHub:
+### From source (recommended)
 
 ```bash
-git clone https://github.com/YourUsername/satyre.git
+git clone https://github.com/zerotonin/satyre.git
 cd satyre
+pip install -e ".[dev,docs]"
 ```
 
-## Directory Structure
+### Conda
+
+```bash
+conda env create -f environment.yml
+conda activate satyre
+pip install -e .
+```
+
+---
+
+## Quick start
+
+### 1. Preprocess raw data
+
+Convert experimental PM index sequences and velocity tables into Markov
+transition matrices:
+
+```bash
+satyre-preprocess --idx data/ORL_IDX.txt \
+                  --velo data/ORL_C.txt  \
+                  --out  data/preprocessed
+```
+
+### 2. Run a Markov-driven simulation
+
+```python
+import numpy as np
+from satyre import MarkovWalker
+
+trans  = np.load("data/preprocessed/cumsum_transition_matrix.npy")
+pm_idx = np.load("data/preprocessed/pm_index_matrix.npy")
+velos  = np.load("data/preprocessed/velocity_array.npy")
+
+walker = MarkovWalker(
+    trans, pm_idx, velos,
+    max_steps=150_000,
+    n_trials=100,
+    food_mode="random",
+)
+results = walker.simulate_multiple()
+print(f"Mean food found: {results['food_found'].mean():.1f}")
+```
+
+### 3. Run a Lévy-flight baseline
+
+```python
+from satyre import LevyWalker
+
+walker = LevyWalker(
+    cauchy_alpha=1.5,
+    mode="cauchy",
+    max_steps=150_000,
+    n_trials=100,
+)
+results = walker.simulate_multiple()
+```
+
+### 4. Analyse results
+
+```python
+from satyre.analysis import summarise_food_collected, step_size_distribution
+
+print(summarise_food_collected(results))
+print(step_size_distribution(results["step_sizes"]))
+```
+
+---
+
+## Project structure
 
 ```
 satyre/
-├── README.md
-├── rawData_preprocessing.py
-├── walkSimOO_updated_darkFly_lightCondition_multiTrials_v2.py
-├── walkSimOO_updated_darkFly_multiTrials_v2.py
-├── walkSimOO_updated_LevyRandom_v3.py
-├── analysis/
-│   ├── analysis_areaCovered.py
-│   ├── analysis_foodFound.py
-│   ├── analysis_movementTypes.py
-│   ├── analysis_PMbased_FoodFound.py
-│   ├── analysis_PMbased_StepsVeloAngles.py
-│   ├── analysis_stepSize.py
-│   └── analysis_velocitiesAngles.py
-├── utilities/
-│   ├── hyperSpaceSolver_updated.py
-│   ├── PMexamples.py
-│   ├── comparisons_v2.py
-│   └── comparisons_v3.py
+├── satyre/
+│   ├── __init__.py                 # public API
+│   ├── simulation/
+│   │   ├── __init__.py
+│   │   ├── markov_walker.py        # HMM-driven agent
+│   │   └── levy_walker.py          # Lévy / random-walk agent
+│   ├── analysis/
+│   │   ├── __init__.py
+│   │   ├── area_covered.py         # exploration-rate metrics
+│   │   ├── food_found.py           # foraging-efficiency stats
+│   │   ├── step_size.py            # step-length distributions
+│   │   └── movement_types.py       # movement classification
+│   └── utils/
+│       ├── __init__.py
+│       ├── hyperspace_solver.py    # toroidal boundary wrap
+│       └── preprocessing.py        # raw data → transition matrices
+├── tests/
+│   └── test_core.py
+├── docs/                           # Sphinx documentation
+├── examples/
+│   └── five_strategy_comparison.py
+├── .github/workflows/
+│   ├── tests.yml                   # CI: pytest across Python versions
+│   └── docs.yml                    # CD: Sphinx → GitHub Pages
+├── pyproject.toml
+├── environment.yml
+├── CITATION.cff
+├── LICENSE
+└── README.md
 ```
 
-- **Data Preprocessing:**  
-  `rawData_preprocessing.py` converts raw text files of movement data into matrices that are used by the simulation modules.
+---
 
-- **Simulation Scripts:**  
-  The `walkSimOO_updated_*` scripts simulate fly trajectories using either dark–fly or ORL movement profiles and incorporate boundary handling via the hyperspace solver.
+## Running the tests
 
-- **Analysis Scripts:**  
-  Scripts in the `analysis/` directory compute and visualize metrics such as the area covered, food found, movement types, step sizes, and velocity/angle distributions.
-
-- **Utilities:**  
-  The `utilities/` folder contains:
-  - `hyperSpaceSolver_updated.py`: Handles re–entry of trajectories that exit the simulation arena.
-  - `PMexamples.py`: Provides examples for prototypical movement (PM) velocity data.
-  - `comparisons_v2.py` and `comparisons_v3.py`: Compare performance across different simulation models.
-
-## Usage
-
-### Running Simulations
-
-1. **Preprocess Raw Data:**  
-   Run the preprocessing script to generate the necessary probability matrices and velocity arrays:
-   ```bash
-   python rawData_preprocessing.py
-   ```
-
-2. **Run a Simulation:**  
-   For example, to simulate fly movement under light conditions using dark–fly data:
-   ```bash
-   python walkSimOO_updated_darkFly_lightCondition_multiTrials_v2.py
-   ```
-   Make sure the required preprocessed data is available in the expected paths.
-
-### Data Analysis
-
-Run any of the analysis scripts to generate plots and statistics. For example:
 ```bash
-python analysis/analysis_areaCovered.py
+python -m pytest -v
 ```
-This script will compute the area covered by the fly’s mechanosensory field and generate comparative boxplots.
 
-### Comparisons
+---
 
-To compare different simulation models, use:
+## Documentation
+
+Full API documentation is built with Sphinx and deployed automatically to
+GitHub Pages on every push to `main`:
+
+📖 **https://zerotonin.github.io/satyre**
+
+To build locally:
+
 ```bash
-python utilities/comparisons_v2.py
-# or
-python utilities/comparisons_v3.py
-```
-These scripts aggregate and visualize data from multiple simulation runs.
-
-### Example: Visualizing Prototypical Movements
-
-Run the example script to see a bar chart of PM velocities:
-```bash
-python utilities/PMexamples.py
+cd docs
+sphinx-build -b html . _build/html
 ```
 
-## Contributing
-
-Contributions are welcome! If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request.
+---
 
 ## Authors
 
-- **Irene Aji**
-- **Dr. Bart Geurten**
+| Name | Affiliation |
+|------|-------------|
+| **Irene M. Aji** | Georg-August-University Göttingen, Dept. of Cellular Neuroscience |
+| **Bart R.H. Geurten** | University of Otago, Dept. of Zoology, Dunedin, New Zealand |
+
+---
+
+## Citing SATYRE
+
+If you use this software, please cite:
+
+```bibtex
+@software{satyre,
+  author    = {Aji, Irene M. and Geurten, Bart R.H.},
+  title     = {{SATYRE} -- Sensory locomotion strATegY fRamEwork},
+  year      = {2026},
+  url       = {https://github.com/zerotonin/satyre},
+  license   = {MIT},
+}
+```
+
+and the accompanying paper:
+
+```bibtex
+@article{corthals2026tactile,
+  author  = {Corthals, Kristina and Aji, Irene M. and Berger, Miriam
+             and Hehlert, Philip and Albers, Jonas and Dullin, Christian
+             and Gras, Heribert and G\"{o}pfert, Martin C. and Fuse, Naoyuki
+             and Geurten, Bart R.H.},
+  title   = {Tactile space expansion in vision-deprived flies},
+  journal = {Proceedings of the Royal Society B},
+  year    = {2026},
+}
+```
+
+---
 
 ## License
 
-[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-
+[MIT](LICENSE) © 2018–2026 Irene M. Aji & Bart R.H. Geurten
