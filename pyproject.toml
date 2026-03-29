@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools >= 69.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satyre"
+version = "1.0.0"
+description = "Sensory locomotion strATegY fRamEwork — simulating and analysing fly exploratory behaviour under visual deprivation."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Irene M. Aji"},
+    {name = "Bart R.H. Geurten", email = "bart.geurten@otago.ac.nz"},
+]
+keywords = [
+    "Drosophila",
+    "locomotion",
+    "foraging simulation",
+    "Lévy flight",
+    "random walk",
+    "dark-fly",
+    "Kyoto drift",
+    "mechanosensation",
+    "Hidden Markov Model",
+    "sensory compensation",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "matplotlib>=3.7",
+    "pandas>=2.0",
+    "seaborn>=0.12",
+    "shapely>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "flake8",
+    "black",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "sphinx-autodoc-typehints",
+]
+
+[project.urls]
+Homepage = "https://github.com/zerotonin/satyre"
+Documentation = "https://zerotonin.github.io/satyre"
+Repository = "https://github.com/zerotonin/satyre"
+Issues = "https://github.com/zerotonin/satyre/issues"
+
+[project.scripts]
+satyre-preprocess = "satyre.utils.preprocessing:main"
+
+[tool.setuptools.packages.find]
+include = ["satyre*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
