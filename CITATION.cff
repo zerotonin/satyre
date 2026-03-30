@@ -22,11 +22,3 @@ url: "https://zerotonin.github.io/satyre"
 license: MIT
 version: 1.0.0
 date-released: "2026-03-30"
-keywords:
-  - Drosophila
-  - locomotion
-  - foraging simulation
-  - Levy flight
-  - dark-fly
-  - Kyoto drift
-  - mechanosensation
