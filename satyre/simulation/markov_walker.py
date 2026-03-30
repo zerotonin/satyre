@@ -126,38 +126,67 @@ class MarkovWalker:
 
         Returns:
             Dictionary with the following keys (each value is
-            an ``ndarray`` indexed by trial number):
+            an ``ndarray`` indexed by trial number).  Column
+            count is determined by the longest trial
+            (hyperspace wrapping can add sub-steps); shorter
+            trials are NaN-padded.
 
             - ``food_found`` — shape ``(n_trials,)``
-            - ``step_sizes`` — shape ``(n_trials, max_steps+2)``
-            - ``psi_angles`` — shape ``(n_trials, max_steps+1)``
-            - ``position_x`` — shape ``(n_trials, max_steps+2)``
-            - ``position_y`` — shape ``(n_trials, max_steps+2)``
+            - ``step_sizes`` — shape ``(n_trials, n_cols)``
+            - ``psi_angles`` — shape ``(n_trials, n_psi)``
+            - ``position_x`` — shape ``(n_trials, n_cols)``
+            - ``position_y`` — shape ``(n_trials, n_cols)``
             - ``head_x``, ``head_y``, ``tail_x``, ``tail_y``
         """
-        n, m = self.n_trials, self.max_steps + 2
-        results: dict[str, NDArray] = {
-            "food_found": np.full(n, np.nan),
-            "step_sizes": np.full((n, m), np.nan),
-            "psi_angles": np.full((n, m - 1), np.nan),
-            "position_x": np.full((n, m), np.nan),
-            "position_y": np.full((n, m), np.nan),
-            "head_x": np.full((n, m), np.nan),
-            "head_y": np.full((n, m), np.nan),
-            "tail_x": np.full((n, m), np.nan),
-            "tail_y": np.full((n, m), np.nan),
-        }
-        for trial in range(n):
+        n = self.n_trials
+
+        # ── collect variable-length per-trial data ──────
+        food_list: list[float] = []
+        steps_list: list[NDArray] = []
+        psi_list: list[list[float]] = []
+        pos_x_list: list[list[float]] = []
+        pos_y_list: list[list[float]] = []
+        hx_list: list[list[float]] = []
+        hy_list: list[list[float]] = []
+        tx_list: list[list[float]] = []
+        ty_list: list[list[float]] = []
+
+        for _ in range(n):
             self.simulate()
-            results["food_found"][trial] = self.food_found_total
-            results["step_sizes"][trial, :] = self._step_size_arr
-            results["psi_angles"][trial, :] = self.psi_angles
-            results["position_x"][trial, :] = self._start_x
-            results["position_y"][trial, :] = self._start_y
-            results["head_x"][trial, :] = self._head_x
-            results["head_y"][trial, :] = self._head_y
-            results["tail_x"][trial, :] = self._tail_x
-            results["tail_y"][trial, :] = self._tail_y
+            food_list.append(float(self.food_found_total))
+            steps_list.append(self._step_size_arr.copy())
+            psi_list.append(list(self.psi_angles))
+            pos_x_list.append(list(self._start_x))
+            pos_y_list.append(list(self._start_y))
+            hx_list.append(list(self._head_x))
+            hy_list.append(list(self._head_y))
+            tx_list.append(list(self._tail_x))
+            ty_list.append(list(self._tail_y))
+
+        # ── determine padded dimensions ─────────────────
+        max_pos = max(len(v) for v in pos_x_list)
+        max_psi = max(len(v) for v in psi_list)
+        max_step = max(len(v) for v in steps_list)
+        max_body = max(len(v) for v in hx_list)
+
+        def _padded(src: list, rows: int, cols: int) -> NDArray:
+            out = np.full((rows, cols), np.nan)
+            for i, v in enumerate(src):
+                length = min(len(v), cols)
+                out[i, :length] = np.asarray(v)[:length]
+            return out
+
+        results: dict[str, NDArray] = {
+            "food_found": np.array(food_list),
+            "step_sizes": _padded(steps_list, n, max_step),
+            "psi_angles": _padded(psi_list, n, max_psi),
+            "position_x": _padded(pos_x_list, n, max_pos),
+            "position_y": _padded(pos_y_list, n, max_pos),
+            "head_x": _padded(hx_list, n, max_body),
+            "head_y": _padded(hy_list, n, max_body),
+            "tail_x": _padded(tx_list, n, max_body),
+            "tail_y": _padded(ty_list, n, max_body),
+        }
         return results
 
     # ── food placement ──────────────────────────────────
