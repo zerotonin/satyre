@@ -1,6 +1,5 @@
 cff-version: 1.2.0
-title: >-
-  SATYRE — Sensory locomotion strATegY fRamEwork
+title: "SATYRE - Sensory locomotion strATegY fRamEwork"
 message: >-
   If you use this software, please cite it using the
   metadata from this file and the accompanying paper.
@@ -9,15 +8,15 @@ authors:
   - given-names: Irene M.
     family-names: Aji
     affiliation: >-
-      Georg-August-University Göttingen, Department of
-      Cellular Neuroscience, Göttingen, Germany
+      Georg-August-University Goettingen, Department of
+      Cellular Neuroscience, Goettingen, Germany
   - given-names: Bart R.H.
     family-names: Geurten
     email: bart.geurten@otago.ac.nz
     affiliation: >-
       Department of Zoology, University of Otago, Dunedin,
       New Zealand
-    orcid: "https://orcid.org/0000-0002-3854-3530"
+    orcid: "https://orcid.org/0000-0002-1816-3241"
 repository-code: "https://github.com/zerotonin/satyre"
 url: "https://zerotonin.github.io/satyre"
 license: MIT
@@ -27,34 +26,7 @@ keywords:
   - Drosophila
   - locomotion
   - foraging simulation
-  - Lévy flight
+  - Levy flight
   - dark-fly
   - Kyoto drift
   - mechanosensation
-references:
-  - type: article
-    title: >-
-      Tactile space expansion in vision-deprived flies
-    authors:
-      - given-names: Kristina
-        family-names: Corthals
-      - given-names: Irene M.
-        family-names: Aji
-      - given-names: Miriam
-        family-names: Berger
-      - given-names: Philip
-        family-names: Hehlert
-      - given-names: Jonas
-        family-names: Albers
-      - given-names: Christian
-        family-names: Dullin
-      - given-names: Heribert
-        family-names: Gras
-      - given-names: Martin C.
-        family-names: Göpfert
-      - given-names: Naoyuki
-        family-names: Fuse
-      - given-names: Bart R.H.
-        family-names: Geurten
-    journal: "Proceedings of the Royal Society B"
-    year: 2026
