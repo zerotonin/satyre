@@ -4,6 +4,7 @@
 [![Documentation](https://github.com/zerotonin/satyre/actions/workflows/docs.yml/badge.svg)](https://zerotonin.github.io/satyre)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![DOI](https://zenodo.org/badge/578341364.svg)](https://doi.org/10.5281/zenodo.19326027)
 
 SATYRE simulates and analyses the exploratory behaviour of *Drosophila
 melanogaster* under visual deprivation.  It provides Markov-chain replay of
