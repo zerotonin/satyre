@@ -105,17 +105,26 @@ class LevyWalker:
             Dictionary keyed by:
 
             - ``food_found`` — shape ``(n_trials,)``
-            - ``step_sizes`` — shape ``(n_trials, max_steps+2)``
+            - ``step_sizes`` — shape ``(n_trials, n_cols)``
+
+            Column count *n_cols* is determined by the longest
+            trial (hyperspace wrapping can add sub-steps beyond
+            *max_steps*).  Shorter trials are NaN-padded.
         """
-        n, m = self.n_trials, self.max_steps + 2
-        results: dict[str, NDArray] = {
-            "food_found": np.full(n, np.nan),
-            "step_sizes": np.full((n, m), np.nan),
-        }
+        n = self.n_trials
+        food_list: list[float] = []
+        step_list: list[NDArray] = []
         for trial in range(n):
             self.simulate()
-            results["food_found"][trial] = self.food_found_total
-            results["step_sizes"][trial, :] = self.step_size_arr
+            food_list.append(float(self.food_found_total))
+            step_list.append(self.step_size_arr.copy())
+        max_cols = max(len(s) for s in step_list)
+        results: dict[str, NDArray] = {
+            "food_found": np.array(food_list),
+            "step_sizes": np.full((n, max_cols), np.nan),
+        }
+        for i, s in enumerate(step_list):
+            results["step_sizes"][i, : len(s)] = s
         return results
 
     # ── food placement ──────────────────────────────────
